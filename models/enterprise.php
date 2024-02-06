@@ -43,10 +43,10 @@ class Enterprise
 
         $query->bindValue(':nom', htmlspecialchars($name), PDO::PARAM_STR);
         $query->bindValue(':email', $email, PDO::PARAM_STR);
-        $query->bindValue(':siret', $siret, PDO::PARAM_INT);
+        $query->bindValue(':siret', $siret, PDO::PARAM_STR);
         $query->bindValue(':adress', $adress, PDO::PARAM_STR);
         $query->bindValue(':password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
-        $query->bindValue(':code', $codePostal, PDO::PARAM_INT);
+        $query->bindValue(':code', $codePostal, PDO::PARAM_STR);
         $query->bindValue(':city', $ville, PDO::PARAM_STR);
         $query->bindValue(':photo', $photo, PDO::PARAM_STR);
 
@@ -60,9 +60,9 @@ class Enterprise
     }
 
     /**
-     * Methode permettant de vérifier si le mail existe dans la base de données de la table Enterprise
+     * Methode permettant de vérifier si le numero de siret existe dans la base de données de la table Enterprise
      * 
-     * @param string $email Adresse mail de l'entreprise
+     * @param string $siret de l'entreprise
      * 
      * @return bool
      */
@@ -99,7 +99,52 @@ class Enterprise
             die();
         }
     }
+
+    /**
+     * Methode permettant de vérifier si le numero de siret existe dans la base de données de la table Enterprise
+     * 
+     * @param string $siret siret de l'entreprise
+     * 
+     * @return bool
+     */
+    public static function checkSiretExist(string $siret): bool
+    {
+        // le try and catch permet de gérer les erreurs, nous allons l'utiliser pour gérer les erreurs liées à la base de données
+        try {
+            // Création d'un objet $db selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT * FROM `enterprise` WHERE `enterprise_siret` = :siret";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':siret', $siret, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on vérifie si le résultat est vide car si c'est le cas, cela veut dire que le mail n'existe pas
+            if (empty($result)) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
 }
+
+
+
+
 
 
 

@@ -25,12 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else if (Enterprise::checkMailExists($_POST['email'])) {
         $errors['email'] = 'Email déjà utilisé';
     }
-
+    // Vérification dU SIRET 
     if (empty($_POST["siret"])) {
         $errors['siret'] = "Numero de siret obligatoire";
-    } else if (!preg_match('/^\d{14}$/', $_POST['siret'])) { {
-            $errors['siret'] = "Le numéro de SIRET doit être composé de 10 chiffres.";
-        }
+    } else if (!preg_match('/^\d{14}$/', $_POST['siret'])) {
+        $errors['siret'] = "Le numéro de SIRET doit être composé de 10 chiffres.";
+    } else if (Enterprise::checkSiretExist($_POST['siret'])) {
+        $errors['siret'] = 'Siret déjà utilisé';
     }
 
     if (empty($_POST["adress"])) {
