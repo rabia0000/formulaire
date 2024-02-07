@@ -140,12 +140,215 @@ class Enterprise
             die();
         }
     }
+
+
+    /**
+     * Methode permettant de vérifier si le nom existe deja dans la base de données de la table Enterprise
+     * 
+     * @param string $siret siret de l'entreprise
+     * 
+     * @return bool
+     */
+    public static function checkNameExits(string $name): bool
+    {
+        // le try and catch permet de gérer les erreurs, nous allons l'utiliser pour gérer les erreurs liées à la base de données
+        try {
+            // Création d'un objet $db selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT * FROM `enterprise` WHERE `enterprise_name` = :nom";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':nom', $name, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on vérifie si le résultat est vide car si c'est le cas, cela veut dire que le mail n'existe pas
+            if (empty($result)) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
+    /**
+     * Methode permettant de récupérer les infos d'une entreprise avec son mail comme paramètre
+     * 
+     * @param string $email Adresse mail de l'entreprise
+     * 
+     * @return array Tableau associatif contenant les infos de l'entreprise
+     */
+    public static function getInfos(string $email): array
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT * FROM `enterprise` WHERE `enterprise_email` = :mail";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':mail', $email, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result;
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
+    /**
+     * Methode permettant de récupérer le nombre total d'utilisateur appartenant a l'entreprise avec entreprise_id comme paramètre
+     * 
+     * @param int $enterprise_id  id de l'entreprise
+     * 
+  
+     */
+    public static function countUser(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT COUNT(user_id) AS user_count FROM userprofil WHERE enterprise_id = :enterprise_id";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result['user_count'];
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
+
+
+    public static function countActifUser(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT COUNT(DISTINCT userprofil.user_id) AS user_count FROM userprofil INNER JOIN ride ON userprofil.user_id = ride.user_id WHERE userprofil.enterprise_id = :enterprise_id";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result['user_count'];
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
+
+    public static function countTotalRide(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT COUNT(DISTINCT userprofil.user_id) AS total_ride FROM ride INNER JOIN userprofil WHERE enterprise_id = :enterprise_id";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result['total_ride'];
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
+
+    public static function displayLastUser(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT user_photo, user_pseudo FROM userprofil 
+            WHERE enterprise_id = :enterprise_id
+            ORDER BY user_id DESC LIMIT 5";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result;
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
 }
 
 
 
 
-
+// SELECT count(*)  FROM `userprofil` NATURAL JOIN `enterprise` WHERE `enterprise_id` = :entreprise_id
+// ";
 
 
 

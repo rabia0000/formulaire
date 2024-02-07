@@ -22,24 +22,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "L'adresse email est invalide.";
     }
-    // if (empty($errors)) {
+    if (empty($errors)) {
 
-    //     if (!Userprofil::checkMailExists($_POST['email'])) {
-    //         $errors['email'] = "utilisateur inconnu";
-    //     } else {
-    //         //je recupère toutes les infos via la méthode getInfos()
-    //         $utilisateurInfos = Userprofil::getInfos($_POST['email']);
-    //         // Utilisation de password_verify pour le mdp
-    //         if (password_verify($_POST["password"], $utilisateurInfos['user_password'])) {
-    //             //ajout de la super global $_SESSION
-    //             $_SESSION['user'] = $utilisateurInfos;
+        if (!Enterprise::checkMailExists($_POST['email'])) {
+            $errors['email'] = "utilisateur inconnu";
+        } else {
+            //je recupère toutes les infos via la méthode getInfos()
+            $utilisateurInfos = Enterprise::getInfos($_POST['email']);
+            // Utilisation de password_verify pour le mdp
+            if (password_verify($_POST["password"], $utilisateurInfos['enterprise_password'])) {
+                //ajout de la super global $_SESSION
+                $_SESSION['enterprise'] = $utilisateurInfos;
 
-    //             header('Location: controller-home.php');
-    //         } else {
-    //             $errors['connexion'] = 'Mauvais mots de passe';
-    //         }
-    //     }
-    // }
+                header('Location: controller-home.php');
+            } else {
+                $errors['connexion'] = 'Mauvais mots de passe';
+            }
+        }
+    }
 }
 ?>
 

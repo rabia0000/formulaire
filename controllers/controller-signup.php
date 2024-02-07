@@ -2,7 +2,7 @@
 
 require_once '../config.php';
 require_once '../models/enterprise.php';
-var_dump($_POST);
+// var_dump($_POST);
 $showform = true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -15,6 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors['name'] = "Nom de l'entreprise obligatoire.";
     } else if (!preg_match("/^[a-zA-ZÀ-ÿ\-]+$/", $_POST["name"])) {
         $errors['name'] = "Le nom est invalide.";
+    } else if (Enterprise::checkNameExits($_POST['name'])) {
+        $errors['name'] = 'Le nom est déjà utilisé';
     }
 
     // Vérification de l'email
@@ -58,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // verification s'il n'y pas d'erreur, nous allons inscrire l'utilisateur
-    var_dump($errors);
+    // var_dump($errors);
 
     if (empty($errors)) {
 
