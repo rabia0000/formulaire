@@ -25,16 +25,12 @@
 
 
 <body>
-
     <nav>
-        <div class="nav-wrapper background-nav">
-            <!-- barre du haut  -->
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="#">Lien 1</a></li>
-                <li><a href="#">Lien 2</a></li>
-                <li><a href="#">Lien 3</a></li>
-            </ul>
+        <div class="nav-wrapper background-nav" style="display: flex; justify-content: flex-end;">
+            <a class="waves-effect waves-light btn red" href="../controllers/controller-deconnexion.php"><i class="material-icons left"></i>Déconnexion</a>
         </div>
+    </nav>
+
     </nav>
     <!-- barre de navigation laterale gauche  -->
     <div class="row black ">
