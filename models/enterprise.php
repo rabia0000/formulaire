@@ -342,15 +342,36 @@ class Enterprise
             die();
         }
     }
+
+    public static function displayLastFiveRides(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT ride_date, ride_distance, user_name, enterprise_id FROM ride INNER JOIN userprofil WHERE enterprise_id = :enterprise_id ORDER BY ride_id DESC LIMIT 5";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // on retourne le résultat
+            return $result;
+        } catch (PDOException $e) {
+            echo 'Erreur : ' . $e->getMessage();
+            die();
+        }
+    }
 }
-
-
-
-
-// SELECT count(*)  FROM `userprofil` NATURAL JOIN `enterprise` WHERE `enterprise_id` = :entreprise_id
-// ";
-
-
 
 
 ?>

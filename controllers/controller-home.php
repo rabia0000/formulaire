@@ -17,10 +17,11 @@ if (!$_SESSION['enterprise']) {
     header('Location: controller-signin.php');
 }
 $lastfiveusers = Enterprise::displayLastUser($_SESSION['enterprise']['enterprise_id']);
+$lastFiveRide = Enterprise::displayLastFiveRides($_SESSION['enterprise']['enterprise_id']);
 
 
 
-var_dump($lastfiveusers);
+// var_dump($lastfiveusers);
 // Contrôleur - Gestion de la logique métier
 
 // Vérifications et traitements du formulaire ici

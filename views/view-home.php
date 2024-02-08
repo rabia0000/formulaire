@@ -126,8 +126,14 @@
                 <div class="col s12 ">
                     <div class="card light-blue darken-4">
                         <div class="card-content white-text">
-                            <span class="card-title">Total des trajets</span>
-                            <p>Aperçu du total trajets...</p>
+                            <span class="card-title">Total des 5 derniers trajets</span>
+                            <?php foreach ($lastFiveRide as $ride) : ?>
+                                <div>
+                                    <p> <?= '<strong> UTILISATEUR : </strong> ' ?><?php echo $ride['user_name']; ?> <?= '<strong> DATE : </strong> ' ?> <?php echo $ride['ride_date']; ?> <?= '<strong> DISTANCE : </strong> ' ?> <?= $ride['ride_distance'] ?> <?= " km" ?> </p>
+                                    <hr>
+
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                         <div class="card-action">
                             <a href="#" class='white-text'>Détails</a>
