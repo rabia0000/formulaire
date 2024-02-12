@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["siret"])) {
         $errors['siret'] = "Numero de siret obligatoire";
     } else if (!preg_match('/^\d{14}$/', $_POST['siret'])) {
-        $errors['siret'] = "Le numéro de SIRET doit être composé de 10 chiffres.";
+        $errors['siret'] = "Le numéro de SIRET doit être composé de 14 chiffres.";
     } else if (Enterprise::checkSiretExist($_POST['siret'])) {
         $errors['siret'] = 'Siret déjà utilisé';
     }
