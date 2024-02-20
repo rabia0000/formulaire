@@ -2,7 +2,7 @@
 
 require_once '../config.php';
 require_once '../models/enterprise.php';
-// var_dump($_POST);
+var_dump($_POST);
 $showform = true;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["name"])) {
         //arrayname["key"]= "value";
         $errors['name'] = "Nom de l'entreprise obligatoire.";
-    } else if (!preg_match("/^[a-zA-ZÀ-ÿ\-]+$/", $_POST["name"])) {
+    } else if (!preg_match("/^[a-zA-ZÀ-ÿ \-]+$/", $_POST["name"])) {
         $errors['name'] = "Le nom est invalide.";
     } else if (Enterprise::checkNameExits($_POST['name'])) {
         $errors['name'] = 'Le nom est déjà utilisé';
@@ -58,7 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors['city'] = "Ville Obligatoire";
     }
 
+    // La réponse du CAPTCHA
+    $captcha_response = $_POST['g-recaptcha-response'];
 
+    // Vérifiez la réponse du CAPTCHA en utilisant l'API de Google
+    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=votre_clé_secrète&response=" . $captcha_response);
+    $response_keys = json_decode($response, true);
+    if (empty($_POST['g-recaptcha-response'])) {
+        $errors['g-recaptcha-response'] = "Cochez je ne suis pas un robot";
+    } else if ($response_keys["success"]) {
+        // Le CAPTCHA est valide. Traitez le formulaire.
+    }
     // verification s'il n'y pas d'erreur, nous allons inscrire l'utilisateur
     // var_dump($errors);
 
@@ -84,6 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 ?>
+
+
 
 
 

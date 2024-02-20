@@ -20,6 +20,11 @@
         .side-nav {
             width: 16rem;
         }
+
+        .image {
+            width: 10rem;
+            height: 10rem;
+        }
     </style>
 </head>
 
@@ -27,6 +32,7 @@
 <body>
     <nav>
         <div class="nav-wrapper background-nav" style="display: flex; justify-content: flex-end;">
+            <a class="waves-effect waves-light btn blue" href="../controllers/controller-users.php"><i class="material-icons left"></i>Utilisateur</a>
             <a class="waves-effect waves-light btn red" href="../controllers/controller-deconnexion.php"><i class="material-icons left"></i>Déconnexion</a>
         </div>
     </nav>
@@ -56,7 +62,7 @@
                     <div class="card blue darken-1">
                         <div class="card-content white-text">
                             <span class="card-title">Total des utilisateurs</span>
-                            <p>nombre d'utilisateur : <?= Enterprise::countUser($_SESSION['enterprise']['enterprise_id']) ?></p>
+                            <p class='flow-text'> <?= $nbTotalUtilisateur ?></p>
                         </div>
                         <div class="card-action">
                             <a href="#">Voir plus</a>
@@ -70,7 +76,7 @@
                     <div class="card deep-purple darken-1">
                         <div class="card-content white-text">
                             <span class="card-title">Total des utilisateurs actif</span>
-                            <p>Nombre d'utilisateur actif : <?= Enterprise::countActifUser($_SESSION['enterprise']['enterprise_id']) ?></p>
+                            <p class='flow-text'> <?= $nbTotalUtilisateurActif ?></p>
                         </div>
                         <div class="card-action">
                             <a href="#">Détails</a>
@@ -82,7 +88,7 @@
                     <div class="card purple darken-1">
                         <div class="card-content white-text">
                             <span class="card-title">Total des trajets</span>
-                            <p> total trajets : <?= Enterprise::countTotalRide($_SESSION['enterprise']['enterprise_id']) ?></p>
+                            <p class='flow-text'> <?= $nbTotalRide ?></p>
                         </div>
                         <div class="card-action">
                             <a href="#">Détails</a>
@@ -96,9 +102,9 @@
                     <div class="card teal darken-1">
                         <div class="card-content white-text">
                             <span class="card-title">Les 5 derniers utilisateurs avec comme infos : </span>
-                            <?php foreach ($lastfiveusers as $user) : ?>
+                            <?php foreach ($displayUsertotal as $user) : ?>
                                 <div>
-                                    <img src="http://afpaform.test/assets/photo/<?= $user['user_photo'] ?>" alt="User Photo">
+                                    <img class="image" src="http://afpaform.test/assets/photo/<?= $user['user_photo'] ?>" alt="User Photo">
                                     <?= $user['user_pseudo'] ?>
                                 </div>
                             <?php endforeach; ?>
@@ -123,9 +129,9 @@
                     <div class="card light-blue darken-4">
                         <div class="card-content white-text">
                             <span class="card-title">Total des 5 derniers trajets</span>
-                            <?php foreach ($lastFiveRide as $ride) : ?>
+                            <?php foreach ($displaytotalride as $ride) : ?>
                                 <div>
-                                    <p> <?= '<strong> UTILISATEUR : </strong> ' ?><?php echo $ride['user_name']; ?> <?= '<strong> DATE : </strong> ' ?> <?php echo $ride['ride_date']; ?> <?= '<strong> DISTANCE : </strong> ' ?> <?= $ride['ride_distance'] ?> <?= " km" ?> </p>
+                                    <p class="flow-text"> <?= '<strong> UTILISATEUR : </strong> ' ?><?php echo $ride['user_name']; ?> <?= '<strong> DATE : </strong> ' ?> <?php echo $ride['ride_date']; ?> <?= '<strong> DISTANCE : </strong> ' ?> <?= $ride['ride_distance'] ?> <?= " km" ?> </p>
                                     <hr>
 
                                 </div>

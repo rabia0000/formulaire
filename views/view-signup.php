@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+
     <title>Document</title>
     <style>
         /* Définir la hauteur de la page pour centrer le contenu */
@@ -40,6 +41,11 @@
 
         .error {
             color: red;
+        }
+
+        .captcha {
+            margin: 0 auto;
+            width: max-content;
         }
     </style>
 </head>
@@ -131,9 +137,13 @@
                             </span><br><br>
 
 
-
-
-                            </span><br>
+                            <div class="g-recaptcha captcha" data-sitekey="6Lc3bHApAAAAAN0iJ1XIGk3RMyRvnKDyw5X0L381"></div>
+                            <span class="error ">
+                                <?php if (isset($errors['g-recaptcha-response'])) {
+                                    echo $errors['g-recaptcha-response'];
+                                } ?>
+                            </span>
+                            <br>
                             <input type="submit" value="S'enregistrer" class="btn btn-dark mt-3 ">
                             <a href="../controllers/controller-signin.php" class="btn btn-dark mt-3">Déjà inscrit</a>
 
@@ -141,8 +151,11 @@
 
                             <br><br><br>
 
+
+
                         </form>
                     </div>
+
 
                 <?php  } else { ?>
                     <div class="container">
@@ -173,7 +186,7 @@
             <!-- Votre code pour le pied de page -->
         </footer>
 
-
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
 

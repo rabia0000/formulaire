@@ -187,9 +187,9 @@ class Enterprise
      * 
      * @param string $email Adresse mail de l'entreprise
      * 
-     * @return array Tableau associatif contenant les infos de l'entreprise
+     * @return string Tableau associatif contenant les infos de l'entreprise
      */
-    public static function getInfos(string $email): array
+    public static function getInfos(string $email): string
     {
         try {
             // Création d'un objet $bdd selon la classe PDO
@@ -210,11 +210,17 @@ class Enterprise
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetch(PDO::FETCH_ASSOC);
 
-            // on retourne le résultat
-            return $result;
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
     /**
@@ -244,12 +250,18 @@ class Enterprise
 
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetch(PDO::FETCH_ASSOC);
-
-            // on retourne le résultat
-            return $result['user_count'];
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
 
@@ -274,12 +286,18 @@ class Enterprise
 
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetch(PDO::FETCH_ASSOC);
-
-            // on retourne le résultat
-            return $result['user_count'];
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
 
@@ -303,12 +321,18 @@ class Enterprise
 
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetch(PDO::FETCH_ASSOC);
-
-            // on retourne le résultat
-            return $result['total_ride'];
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result['total_ride'] ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
 
@@ -334,15 +358,20 @@ class Enterprise
 
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            // on retourne le résultat
-            return $result;
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
-
     public static function displayLastFiveRides(int $enterprise_id)
     {
         try {
@@ -363,15 +392,116 @@ class Enterprise
 
             // on récupère le résultat de la requête dans une variable
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            // on retourne le résultat
-            return $result;
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
         } catch (PDOException $e) {
-            echo 'Erreur : ' . $e->getMessage();
-            die();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
         }
     }
+    public static function totalUser(int $enterprise_id)
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            // stockage de ma requete dans une variable
+            $sql = "SELECT * FROM userprofil 
+            WHERE enterprise_id = :enterprise_id
+            ORDER BY user_id";
+
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
+
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':enterprise_id', $enterprise_id, PDO::PARAM_STR);
+
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
+        } catch (PDOException $e) {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
+        }
+    }
+
+
+
+    //cree une methode pour validate
+    /**
+     * Methode qui permet de bloquer un utilisateur 
+     * @param INT $userId id de l'utilisateur 
+     * @return Boolean 
+     * 
+     * 
+     */
+
+    public static function unvalidate(int $userId): bool
+    {
+        try {
+            // Création d'un objet $bdd selon la classe PDO
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+
+            $sql = "UPDATE `userprofil` SET `user_validate` = 0 WHERE `user_id` = :user_id";
+            //eviter de faire des injection sql 'prepare'
+            $query = $bdd->prepare($sql);
+            // permet d'accepter que des integer BindValue
+            $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $query->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Methode qui permet valider/debloquer un utilisateur
+     *   
+     * @param INT $userId recupere l'id de l'utilisateur
+     * 
+     * @return BOOL 
+     */
+    public static function validate(INT $userId): bool
+    {
+        try {
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
+
+            $sql = "UPDATE userprofil SET user_validate = 1 WHERE user_id = :user_id";
+            $query = $bdd->prepare($sql);
+            $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $query->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+
+
+    // cree une methode pour invalidate
+
+
+
 }
-
-
-?>

@@ -27,8 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!Enterprise::checkMailExists($_POST['email'])) {
             $errors['email'] = "utilisateur inconnu";
         } else {
+            var_dump(Enterprise::getInfos($_POST['email']));
             //je recupère toutes les infos via la méthode getInfos()
-            $utilisateurInfos = Enterprise::getInfos($_POST['email']);
+            $utilisateurInfos = json_decode(Enterprise::getInfos($_POST['email']), true)['data'];
             // Utilisation de password_verify pour le mdp
             if (password_verify($_POST["password"], $utilisateurInfos['enterprise_password'])) {
                 //ajout de la super global $_SESSION
