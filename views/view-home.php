@@ -32,7 +32,7 @@
 <body>
     <nav>
         <div class="nav-wrapper background-nav" style="display: flex; justify-content: flex-end;">
-            <a class="waves-effect waves-light btn blue" href="../controllers/controller-users.php"><i class="material-icons left"></i>Utilisateur</a>
+            <a class="waves-effect waves-light btn blue" href="../controllers/controller-users.php" type="submit"><i class="material-icons left"></i>Utilisateur</a>
             <a class="waves-effect waves-light btn red" href="../controllers/controller-deconnexion.php"><i class="material-icons left"></i>Déconnexion</a>
         </div>
     </nav>

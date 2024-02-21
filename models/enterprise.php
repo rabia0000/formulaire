@@ -497,11 +497,43 @@ class Enterprise
         }
     }
 
+    /**
+     * Methode qui affiche tout les infos de l'utilisateur selon son id
+     * @param INT $userId recupere l'id de l'utilisateur
+     */
 
+    public static function displayUser(INT $userId)
+    {
+        // Création d'un objet $bdd selon la classe PDO
 
+        try {
+            $bdd = new PDO("mysql:host=localhost;dbname=" . DBNAME, DBUSERNAME, DBPASSWORD);
 
-    // cree une methode pour invalidate
+            $sql = "SELECT * FROM `userprofil` WHERE `user_id` = :user_id";
 
+            // je prepare ma requête pour éviter les injections SQL
+            $query = $bdd->prepare($sql);
 
+            // on relie les paramètres à nos marqueurs nominatifs à l'aide d'un bindValue
+            $query->bindValue(':user_id', $userId, PDO::PARAM_STR);
 
+            // on execute la requête
+            $query->execute();
+
+            // on récupère le résultat de la requête dans une variable
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            // var_dump($result);
+            // on retourne un JSON avec le status succes et les données récuperées, ou un tableau vide si aucun resultat 
+            return json_encode([
+                'status' => 'success',
+                'data' => $result ?? [] // si aucun resultat return un tableau vide
+            ]);
+        } catch (PDOException $e) {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Erreur : ' . $e->getMessage()
+
+            ]);
+        }
+    }
 }
